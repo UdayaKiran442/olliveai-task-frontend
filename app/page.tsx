@@ -1,7 +1,15 @@
-export default function Home() {
+import { auth } from '@clerk/nextjs/server'
+import SignIn from '../components/SignIn';
+import { redirect } from 'next/navigation';
+
+export default async function Home() {
+  const { isAuthenticated } = await auth()
+  if (isAuthenticated) {
+    redirect('/chat') // Redirect to the chat page if the user is authenticated
+  }
   return (
     <div>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
+      <SignIn />
     </div>
   );
 }
