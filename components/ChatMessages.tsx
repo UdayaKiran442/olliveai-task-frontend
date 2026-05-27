@@ -4,6 +4,7 @@ import { useState } from "react";
 import { IChatMessage } from "@/types/types";
 import { getChatMessagesAPI, sendMessageAPI } from "@/actions/chat.actions";
 import { useAuth } from "@clerk/nextjs";
+import { models } from "@/constants/constants";
 
 interface ChatProps {
     chatMessages: IChatMessage[];
@@ -12,32 +13,42 @@ interface ChatProps {
 
 export default function ChatMessages({ chatMessages, chatId }: ChatProps) {
     const [inputValue, setInputValue] = useState("");
+    const [selectedModel, setSelectedModel] = useState<keyof typeof models>("sarvam-30b");
     const [loading, setLoading] = useState(false);
     const [messages, setMessages] = useState(chatMessages);
     const { getToken } = useAuth();
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+        if (!inputValue.trim()) return;
+
+        const currentInput = inputValue;
         setInputValue("");
+        
         const token = await getToken();
         if (!token) return;
-        if (!inputValue.trim()) return;
+
+        const provider = models[selectedModel];
+
+        // Optimistic Update
         setMessages([...messages, {
             messageId: `temp-${Date.now()}`,
             chatId,
-            query: inputValue,
+            query: currentInput,
             response: "Generating response...",
-            model: "gpt-4o-mini",
-            provider: "openai",
+            model: selectedModel,
+            provider: provider,
             createdAt: new Date().toISOString()
         }]);
+        
         setLoading(true);
         const newMessage = await sendMessageAPI({
             chatId,
-            query: inputValue,
-            model: "gpt-4o-mini",
-            provider: "openai"
+            query: currentInput,
+            model: selectedModel,
+            provider: provider
         }, token);
+
         if (!newMessage.success) {
             // Handle error
         }
@@ -92,7 +103,7 @@ export default function ChatMessages({ chatMessages, chatId }: ChatProps) {
 
             {/* Fixed Bottom Input Box */}
             <div className="border-t border-gray-100 bg-white p-4 sticky bottom-0 left-0 right-0">
-                <form onSubmit={handleSubmit} className="max-w-2xl mx-auto flex gap-2">
+                <form onSubmit={handleSubmit} className="max-w-2xl mx-auto flex gap-2 items-center">
                     <input
                         type="text"
                         value={inputValue}
@@ -100,6 +111,18 @@ export default function ChatMessages({ chatMessages, chatId }: ChatProps) {
                         placeholder="Type a message..."
                         className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all text-sm text-gray-800"
                     />
+                    
+                    {/* Hardcoded Model Selector Dropdown */}
+                    <select
+                        value={selectedModel}
+                        onChange={(e) => setSelectedModel(e.target.value as keyof typeof models)}
+                        disabled={loading}
+                        className="px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 outline-none focus:border-blue-500 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <option value="sarvam-30b">Sarvam 30B</option>
+                        <option value="gpt-4o-mini">GPT-4o Mini</option>
+                    </select>
+
                     <button
                         type="submit"
                         disabled={loading}
