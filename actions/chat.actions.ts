@@ -1,6 +1,8 @@
+import { INewChatResponse } from "@/types/types";
+
 const BASE_URL = "http://localhost:3000/api/chat";
 
-export async function createChatAPI(token: string){
+export async function createChatAPI(token: string): Promise<INewChatResponse>{
     const newChat = await fetch(`${BASE_URL}/new-chat`, {
         method: 'POST',
         headers: {

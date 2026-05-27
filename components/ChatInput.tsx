@@ -3,6 +3,7 @@
 import { createChatAPI } from "@/actions/chat.actions";
 import { useAuth } from "@clerk/nextjs";
 import { Send } from "lucide-react";
+import { redirect } from "next/navigation";
 import { useState } from "react";
 
 export default function ChatInput() {
@@ -13,18 +14,9 @@ export default function ChatInput() {
         if (!token) return;
         if (!message.trim()) return;
         const newChat = await createChatAPI(token);
-        console.log(newChat);
-        /**
-         * {
-    "success": true,
-    "chat": {
-        "chatId": "chat_z9y5TWdWgq08J-6C6jXV9",
-        "userId": "user_3EFRtfVOgds9cLzWGFQzvXgebj0",
-        "createdAt": "2026-05-26T11:44:35.680Z",
-        "updatedAt": "2026-05-26T11:44:35.680Z"
-    }
-}
-         */
+        if (newChat.success) {
+            redirect(`/chat/${newChat.chat.chatId}`);
+        }
     }
     return (
         <div className="min-h-screen flex items-center justify-center">
