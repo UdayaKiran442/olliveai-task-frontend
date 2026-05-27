@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { IChatMessage } from "@/types/types";
-import { sendMessageAPI } from "@/actions/chat.actions";
+import { getChatMessagesAPI, sendMessageAPI } from "@/actions/chat.actions";
 import { useAuth } from "@clerk/nextjs";
 
 interface ChatProps {
@@ -18,9 +18,19 @@ export default function ChatMessages({ chatMessages, chatId }: ChatProps) {
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+        setInputValue("");
         const token = await getToken();
         if (!token) return;
         if (!inputValue.trim()) return;
+        setMessages([...messages, {
+            messageId: `temp-${Date.now()}`,
+            chatId,
+            query: inputValue,
+            response: "Generating response...",
+            model: "gpt-4o-mini",
+            provider: "openai",
+            createdAt: new Date().toISOString()
+        }]);
         setLoading(true);
         const newMessage = await sendMessageAPI({
             chatId,
@@ -31,10 +41,19 @@ export default function ChatMessages({ chatMessages, chatId }: ChatProps) {
         if (!newMessage.success) {
             // Handle error
         }
-        setMessages((prev) => [...prev, newMessage.message]);
+        await fetchMessages();
         setLoading(false);
-        setInputValue("");
     };
+
+    async function fetchMessages() {
+        const token = await getToken();
+        if (!token) return;
+        const messages = await getChatMessagesAPI({chatId}, token)
+        if (!messages.success) {
+            // handle error
+        }
+        setMessages(messages.messages);
+    }
 
     return (
         <div className="flex flex-col h-screen bg-white">

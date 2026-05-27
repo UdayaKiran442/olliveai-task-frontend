@@ -16,7 +16,7 @@ export default async function Page({params}: { params: Promise<{ chatId: string 
     }
     return (
         <div>
-            <ChatMessages chatMessages={messages.messages} />
+            <ChatMessages chatId={chatId} chatMessages={messages.messages} />
         </div>
     )
 }
