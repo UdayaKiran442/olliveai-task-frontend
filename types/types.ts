@@ -11,3 +11,15 @@ export type INewChatResponse =  ISuccessResponse & {
         updatedAt: string;
     }
 }
+
+export type IChat = {
+    chatId: string;
+    userId: string;
+    name: string | null;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export type IGetUserChatsResponse = ISuccessResponse & {
+    chats: IChat[];
+}
