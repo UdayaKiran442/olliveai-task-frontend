@@ -1,4 +1,4 @@
-import { IGetChatMessagesResponse, IGetUserChatsResponse, INewChatResponse } from "@/types/types";
+import { IChatQueryResponse, IGetChatMessagesResponse, IGetUserChatsResponse, INewChatResponse } from "@/types/types";
 
 const BASE_URL = "http://localhost:3000/api/chat";
 
@@ -34,4 +34,16 @@ export async function getChatMessagesAPI(payload: {chatId: string}, token: strin
         body: JSON.stringify(payload)
     })
     return await messages.json();
+}
+
+export async function sendMessageAPI(payload: {chatId: string; query: string; model: string; provider: string}, token: string): Promise<IChatQueryResponse>{
+    const response = await fetch(`${BASE_URL}/query`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `${token}`
+        },
+        body: JSON.stringify(payload)
+    })
+    return await response.json();
 }

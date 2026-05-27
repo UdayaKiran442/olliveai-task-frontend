@@ -37,3 +37,7 @@ export type IChatMessage = {
 export type IGetChatMessagesResponse = ISuccessResponse & {
     messages: IChatMessage[];
 }
+
+export type IChatQueryResponse = ISuccessResponse & {
+    message: IChatMessage;
+}

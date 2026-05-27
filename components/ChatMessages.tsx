@@ -2,19 +2,37 @@
 
 import { useState } from "react";
 import { IChatMessage } from "@/types/types";
+import { sendMessageAPI } from "@/actions/chat.actions";
+import { useAuth } from "@clerk/nextjs";
 
 interface ChatProps {
     chatMessages: IChatMessage[];
+    chatId: string;
 }
 
-export default function ChatMessages({ chatMessages }: ChatProps) {
+export default function ChatMessages({ chatMessages, chatId }: ChatProps) {
     const [inputValue, setInputValue] = useState("");
+    const [loading, setLoading] = useState(false);
     const [messages, setMessages] = useState(chatMessages);
+    const { getToken } = useAuth();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+        const token = await getToken();
+        if (!token) return;
         if (!inputValue.trim()) return;
-        
+        setLoading(true);
+        const newMessage = await sendMessageAPI({
+            chatId,
+            query: inputValue,
+            model: "gpt-4o-mini",
+            provider: "openai"
+        }, token);
+        if (!newMessage.success) {
+            // Handle error
+        }
+        setMessages((prev) => [...prev, newMessage.message]);
+        setLoading(false);
         setInputValue("");
     };
 
@@ -65,9 +83,10 @@ export default function ChatMessages({ chatMessages }: ChatProps) {
                     />
                     <button
                         type="submit"
+                        disabled={loading}
                         className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl text-sm transition-colors shadow-sm"
                     >
-                        Send
+                        {loading ? "Sending..." : "Send"}
                     </button>
                 </form>
             </div>
