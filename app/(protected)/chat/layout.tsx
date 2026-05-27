@@ -14,8 +14,8 @@ export default async function Layout({children}: {children: React.ReactNode}) {
         // handle error
     }
     return (
-        <div className="flex bg-bg_primary h-screen w-full">
-            <div className="w-[20%] p-5 border-r border-b border-border_primary h-screen">
+        <div className="flex h-full w-full">
+            <div className="w-[20%] p-5 border-r h-full ">
                 <ChatLayoutComponent chats={chats.chats} />
             </div>
 

@@ -23,3 +23,17 @@ export type IChat = {
 export type IGetUserChatsResponse = ISuccessResponse & {
     chats: IChat[];
 }
+
+export type IChatMessage = {
+    messageId: string;
+    chatId: string;
+    query: string;
+    response: string;
+    model: string;
+    provider: string;
+    createdAt: string;
+}
+
+export type IGetChatMessagesResponse = ISuccessResponse & {
+    messages: IChatMessage[];
+}

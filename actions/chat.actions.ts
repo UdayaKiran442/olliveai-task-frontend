@@ -1,4 +1,4 @@
-import { IGetUserChatsResponse, INewChatResponse } from "@/types/types";
+import { IGetChatMessagesResponse, IGetUserChatsResponse, INewChatResponse } from "@/types/types";
 
 const BASE_URL = "http://localhost:3000/api/chat";
 
@@ -22,4 +22,16 @@ export async function getUserChatsAPI(token: string): Promise<IGetUserChatsRespo
         }
     })
     return await chats.json();
+}
+
+export async function getChatMessagesAPI(payload: {chatId: string}, token: string): Promise<IGetChatMessagesResponse>{
+    const messages = await fetch(`${BASE_URL}/history`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `${token}`
+        },
+        body: JSON.stringify(payload)
+    })
+    return await messages.json();
 }
