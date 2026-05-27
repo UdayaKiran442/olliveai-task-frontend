@@ -103,7 +103,7 @@ export default function ChatMessages({ chatMessages, chatId }: ChatProps) {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl text-sm transition-colors shadow-sm"
+                        className={`cursor-pointer px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl text-sm transition-colors shadow-sm ${loading ? 'cursor-not-allowed opacity-50' : ''}`}
                     >
                         {loading ? "Sending..." : "Send"}
                     </button>
