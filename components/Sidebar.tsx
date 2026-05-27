@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { SideBarNavigation } from "./SidebarNavigation";
-import { BookmarkIcon } from "lucide-react";
+import { Logs, MessageSquare } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 export function Sidebar() {
@@ -23,7 +23,12 @@ export function Sidebar() {
             <div>
                 <Link href={'/chat'}>
                     <SideBarNavigation label="Chat" view={view}>
-                        <BookmarkIcon size={18} />
+                        <MessageSquare size={18} className={`${view === 'Chat' ? 'text-black' : 'text-gray-300'}`} />
+                    </SideBarNavigation>
+                </Link>
+                <Link href={'/logs'}>
+                    <SideBarNavigation label="Logs" view={view}>
+                        <Logs size={18} className={`${view === 'Logs' ? 'text-black' : 'text-gray-300'}`} />
                     </SideBarNavigation>
                 </Link>
             </div>
