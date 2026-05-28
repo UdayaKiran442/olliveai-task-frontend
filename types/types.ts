@@ -63,3 +63,11 @@ export type IGetUserMessageMetadataResponse = ISuccessResponse & {
 export type IGetMessageMetadataByIdResponse = ISuccessResponse & {
     metadata: IMessageMetadata;
 }
+
+export type IUsageStatsResponse = ISuccessResponse & {
+    stats: {
+        numberOfRequests: number;
+        averageLatency: number;
+        throughput: number;
+    }
+}

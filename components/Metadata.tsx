@@ -1,9 +1,9 @@
 "use client";
 
-import { IMessageMetadata } from "@/types/types";
+import { IMessageMetadata, IUsageStatsResponse } from "@/types/types";
 import { redirect } from "next/navigation";
 
-export default function Metadata({ messageMetadata }: { messageMetadata: IMessageMetadata[] }) {
+export default function Metadata({ messageMetadata, usageStats }: { messageMetadata: IMessageMetadata[]; usageStats: IUsageStatsResponse['stats'] }) {
     if (!messageMetadata || messageMetadata.length === 0) {
         return (
             <div className="bg-white p-8 text-center rounded-xl border border-gray-100 shadow-sm">

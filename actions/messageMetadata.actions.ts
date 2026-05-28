@@ -1,6 +1,6 @@
 const BASE_URL = "http://localhost:3000/api/message-metadata";
 
-import { IGetMessageMetadataByIdResponse, IGetUserMessageMetadataResponse, ISuccessResponse } from "@/types/types";
+import { IGetMessageMetadataByIdResponse, IGetUserMessageMetadataResponse, ISuccessResponse, IUsageStatsResponse } from "@/types/types";
 
 export async function getUserMessageMetadataAPI(token: string): Promise<IGetUserMessageMetadataResponse> {
     const response = await fetch(`${BASE_URL}`, {
@@ -33,6 +33,17 @@ export async function updateMessageMetadataAPI(payload: {messageId: string, late
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
+    });
+    return await response.json();
+}
+
+export async function getUsageStatsAPI(token: string): Promise<IUsageStatsResponse> {
+    const response = await fetch(`${BASE_URL}/fetch-usage-stats`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `${token}`,
+            'Content-Type': 'application/json'
+        },
     });
     return await response.json();
 }
