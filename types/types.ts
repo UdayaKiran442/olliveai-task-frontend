@@ -41,3 +41,21 @@ export type IGetChatMessagesResponse = ISuccessResponse & {
 export type IChatQueryResponse = ISuccessResponse & {
     message: IChatMessage;
 }
+
+export type IMessageMetadata = {
+    metadataId: string;
+    messageId: string;
+    userId: string;
+    chatId: string;
+    prompt: string;
+    response: string;
+    tokens: number;
+    provider: string;
+    model: string;
+    requestId: string;
+    timestamp: string;
+}
+
+export type IGetUserMessageMetadataResponse = ISuccessResponse & {
+    metadata: IMessageMetadata[];
+}
