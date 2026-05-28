@@ -1,4 +1,7 @@
+"use client";
+
 import { IMessageMetadata } from "@/types/types";
+import { redirect } from "next/navigation";
 
 export default function Metadata({ messageMetadata }: { messageMetadata: IMessageMetadata[] }) {
     if (!messageMetadata || messageMetadata.length === 0) {
@@ -33,7 +36,7 @@ export default function Metadata({ messageMetadata }: { messageMetadata: IMessag
                     </thead>
                     <tbody className="divide-y divide-gray-100 text-sm text-gray-700">
                         {messageMetadata.map((meta) => (
-                            <tr key={meta.metadataId} className="hover:bg-gray-50/50 transition-colors">
+                            <tr onClick={() => redirect(`/logs/${meta.metadataId}`)} key={meta.metadataId} className="hover:bg-gray-50/50 transition-colors cursor-pointer">
 
                                 {/* ChatId */}
                                 <td className="py-4 px-6 whitespace-nowrap">
