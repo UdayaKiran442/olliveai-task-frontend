@@ -5,6 +5,7 @@ import { IChatMessage } from "@/types/types";
 import { getChatMessagesAPI, sendMessageAPI } from "@/actions/chat.actions";
 import { useAuth } from "@clerk/nextjs";
 import { models } from "@/constants/constants";
+import { updateMessageMetadataAPI } from "@/actions/messageMetadata.actions";
 
 interface ChatProps {
     chatMessages: IChatMessage[];
@@ -42,18 +43,26 @@ export default function ChatMessages({ chatMessages, chatId }: ChatProps) {
         }]);
         
         setLoading(true);
+        const requestStartTime = Date.now();
         const newMessage = await sendMessageAPI({
             chatId,
             query: currentInput,
             model: selectedModel,
             provider: provider
         }, token);
-
         if (!newMessage.success) {
             // Handle error
         }
         await fetchMessages();
+        const requestEndTime = Date.now();
+        const latency = requestEndTime - requestStartTime;
+        const response = await updateMessageMetadataAPI({messageId: newMessage.message.messageId, latency}, token);
+        if (!response.success) {
+            // Handle error
+        }
         setLoading(false);
+
+
     };
 
     async function fetchMessages() {
