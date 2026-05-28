@@ -59,3 +59,7 @@ export type IMessageMetadata = {
 export type IGetUserMessageMetadataResponse = ISuccessResponse & {
     metadata: IMessageMetadata[];
 }
+
+export type IGetMessageMetadataByIdResponse = ISuccessResponse & {
+    metadata: IMessageMetadata;
+}
